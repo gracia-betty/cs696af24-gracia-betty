@@ -8,41 +8,87 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Get restaurant by ID
-app.get("/restaurants/:id", function (req, res) {
-  const restaurant_id = req.params["id"];
-  db.collection("restaurants")
-    .findOne({ restaurant_id: restaurant_id })
-    .then((value) => res.send(value))
-    .catch(() => res.status(500).send("Not Found"));
+app.get('/restaurants', async (req, res) => {
+    const { borough, cuisine } = req.query;
+
+    // Validate that both parameters are provided
+    if (!borough || !cuisine) {
+        return res.status(400).send({ error: "Both borough and cuisine parameters are required" });
+    }
+
+    try {
+        // Use aggregation to perform a case-insensitive match
+        const restaurants = await db.collection("restaurants").aggregate([
+            {
+                $match: {
+                    $expr: {
+                        $and: [
+                            { $eq: [{ $toLower: "$borough" }, borough.toLowerCase()] },
+                            { $eq: [{ $toLower: "$cuisine" }, cuisine.toLowerCase()] }
+                        ]
+                    }
+                }
+            }
+        ]).toArray();
+
+        if (restaurants.length > 0) {
+            res.send(restaurants);
+        } else {
+            res.status(404).send({ error: "No restaurants found for the given borough and cuisine" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ error: "Internal Server Error" });
+    }
 });
 
-// Create a new restaurant
-app.post("/restaurants", function (req, res) {
-  const { restaurant_id, name, borough, cuisine } = req.body;
-  db.collection("restaurants")
-    .insertOne({ restaurant_id, name, borough, cuisine })
-    .then((result) =>
-      result.acknowledged
-        ? res.send({ restaurant_id, name, borough, cuisine })
-        : res.status(500).send("Failed")
-    )
-    .catch(() => res.status(500).send("Failed"));
+app.get('/restaurants/:id', async (req, res) => {
+    const restaurant_id = req.params["id"];
+    try {
+        const restaurant = await db.collection("restaurants").findOne({ restaurant_id });
+        if (restaurant) {
+            res.send(restaurant);
+        } else {
+            res.status(404).send({ error: "Restaurant not found" });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Internal Server Error");
+    }
 });
 
-// Delete a restaurant
-app.delete("/restaurants/:id", function (req, res) {
-  const restaurant_id = req.params["id"];
-  db.collection("restaurants")
-    .deleteOne({ restaurant_id: restaurant_id })
-    .then((result) =>
-      result.acknowledged && result.deletedCount >= 1
-        ? res.send("Success")
-        : res.status(500).send("Failed")
-    )
-    .catch(() => res.status(500).send("Not Found"));
+app.post('/restaurants', async (req, res) => {
+    const { restaurant_id, name, borough, cuisine } = req.body;
+    try {
+        const result = await db.collection("restaurants").insertOne({
+            restaurant_id, name, borough, cuisine
+        });
+        if (result.acknowledged) {
+            res.send({ restaurant_id, name, borough, cuisine });
+        } else {
+            res.status(500).send("Failed to add restaurant");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to add restaurant");
+    }
+});
+
+app.delete('/restaurants/:id', async (req, res) => {
+    const restaurant_id = req.params["id"];
+    try {
+        const result = await db.collection("restaurants").deleteOne({ restaurant_id });
+        if (result.acknowledged && result.deletedCount > 0) {
+            res.send("Success");
+        } else {
+            res.status(404).send("Restaurant not found");
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Failed to delete restaurant");
+    }
 });
 
 app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+    console.log(`Server listening on port ${PORT}`);
 });
