@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import db from "./db/connection.js";
+import messageQueue from "./db/bull.js";
+
 
 const PORT = process.env.PORT || 8000;
 const app = express();
@@ -88,6 +90,20 @@ app.delete('/restaurants/:id', async (req, res) => {
         res.status(500).send("Failed to delete restaurant");
     }
 });
+
+app.put('/restaurants/:id', async function (req, res) {
+    const restaurant_id = req.params["id"];
+    const updates = req.body["updates"];
+    
+    // Add the updates to the message queue
+    await messageQueue.add({
+        restaurant_id: restaurant_id,
+        updates: JSON.stringify(updates),
+    });
+
+    res.send("Message Queued");
+});
+
 
 app.listen(PORT, () => {
     console.log(`Server listening on port ${PORT}`);
