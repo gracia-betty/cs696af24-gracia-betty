@@ -1,0 +1,167 @@
+/* Global styles */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+}
+
+/* Sidebar container */
+.sidebar {
+  width: 250px;
+  height: 100vh;
+  background-color: #fff;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: flex-start; /* Align items to the top */
+  padding-top: 20px;
+}
+
+/* Sidebar heading */
+.sidebar h4 {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Sidebar links */
+.sidebar .nav-link {
+  color: #333;
+  font-size: 16px;
+  padding: 10px 20px;
+  text-decoration: none;
+  display: block; /* Ensures items are full width and stacked */
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  color: #000;
+}
+
+
+/* Main content */
+.main-content {
+  margin-left: 250px; /* Account for sidebar width */
+  padding: 20px;
+}
+
+/* Header container */
+.header {
+  display: flex; /* Flexbox for layout */
+  justify-content: space-between; /* Space between left and right sections */
+  align-items: center; /* Vertically align items */
+  height: 60px; /* Header height */
+  padding: 0 20px; /* Horizontal padding */
+  background-color: #f8f9fa; /* Light gray background */
+  border-bottom: 1px solid #ddd; /* Subtle border */
+}
+
+/* Search bar styling */
+.search-bar input {
+  width: 250px; /* Adjust search bar width */
+  padding: 8px 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Icons container */
+.header-icons {
+  display: flex;
+  gap: 20px; /* Space between icons */
+  font-size: 20px;
+  color: #333;
+  cursor: pointer;
+}
+
+.stat-card {
+  background-color: #fff; /* White background */
+  border-radius: 10px; /* Rounded corners */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  padding: 20px; /* Inner spacing */
+  margin-bottom: 20px; /* Space between cards */
+  text-align: left; /* Align text to the left */
+}
+
+.stat-card .card-title {
+  margin-top: 10px; /* Space above the title */
+  margin-bottom: 10px; /* Space below the title */
+  font-size: 14px;
+  color: #6c757d; /* Light gray color for title */
+  font-weight: 600; /* Semi-bold title */
+}
+
+.stat-card .card-value {
+  font-size: 24px; /* Larger font for values */
+  font-weight: bold; /* Bold for emphasis */
+  margin: 0; /* Remove extra margin */
+}
+
+
+
+.cards {
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.card {
+  border: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.card h4 {
+  font-size: 1.5rem;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+/* Chart container */
+.chart-container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* Container for the performance metrics */
+.performance-metrics {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Progress bar container */
+.progress-item {
+  margin-bottom: 15px;
+}
+
+.progress-item span {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.progress-bar {
+  width: 100%; /* Full width container */
+  background-color: #e9ecef; /* Light gray background */
+  border-radius: 10px;
+  height: 12px; /* Height of the bar */
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%; /* Full height of the bar */
+  background-color: #007bff; /* Blue progress fill */
+  border-radius: 10px;
+  transition: width 0.5s ease-in-out; /* Smooth transition for width */
+}
